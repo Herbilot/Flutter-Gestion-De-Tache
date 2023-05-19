@@ -6,26 +6,25 @@ import 'package:Groupe2/page/home.dart';
 import 'package:Groupe2/page/signin.dart';
 import 'package:Groupe2/page/signup.dart';
 import 'package:Groupe2/services/auth-service.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   // Créez une instance de FirebaseMessaging
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  // Demandez l'autorisation d'envoyer des notifications (optionnel)
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  print('Autorisation accordée : ${settings.authorizationStatus}');
+  // // Demandez l'autorisation d'envoyer des notifications (optionnel)
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   badge: true,
+  //   sound: true,
+  // );
+  // print('Autorisation accordée : ${settings.authorizationStatus}');
 
-  // Obtenez le jeton d'identification de l'appareil
-  String? token = await messaging.getToken();
-  print('Token Firebase : $token');
+  // // Obtenez le jeton d'identification de l'appareil
+  // String? token = await messaging.getToken();
+  // print('Token Firebase : $token');
 
   runApp(const MyApp());
 }

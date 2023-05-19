@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:Groupe2/page/verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -138,7 +139,7 @@ class _SignupState extends State<Signup> {
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (builder) => Login()),
+        MaterialPageRoute(builder: (builder) => VerificationEmail()),
         (route) => false,
       );
     } on FirebaseException catch (e) {

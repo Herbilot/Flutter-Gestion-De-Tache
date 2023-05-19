@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:Groupe2/page/restore.dart';
+import 'package:Groupe2/page/verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +79,38 @@ class _LoginState extends State<Login> {
               obscureText: true,
             ),
             SizedBox(height: 50),
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (builder) => ResetPassword()),
+                    (route) => false);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Mot de passe oublié?',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 50),
             butonL(
               onTap: connexionL,
             ),
@@ -148,7 +182,7 @@ class _LoginState extends State<Login> {
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (builder) => HomePage()),
+          MaterialPageRoute(builder: (builder) => VerificationEmail()),
           (route) => false);
     } on FirebaseException catch (e) {
       final snackbar = SnackBar(content: Text(e.toString()));

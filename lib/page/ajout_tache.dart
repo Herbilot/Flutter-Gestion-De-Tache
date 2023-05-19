@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Groupe2/composants/button.dart';
@@ -9,6 +10,7 @@ import 'package:Groupe2/composants/chipBox.dart';
 import 'package:Groupe2/composants/label.dart';
 import 'package:Groupe2/composants/textfield.dart';
 import 'package:Groupe2/composants/texteArea.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:intl/intl.dart';
 
 class PageAjout extends StatefulWidget {
@@ -28,6 +30,7 @@ class _PageAjoutState extends State<PageAjout> {
   String tacheCategorie = "";
   final _dateFin = TextEditingController();
   final _dateDebut = TextEditingController();
+  firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
   void _Ajouter() {
     FirebaseFirestore.instance.collection('Tache').add({
       'date_fin': _dateFinControl.text,
@@ -35,7 +38,8 @@ class _PageAjoutState extends State<PageAjout> {
       'categorie': tacheCategorie,
       'description': _descriptionControlleur.text,
       'libelle': _libelleControlleur.text,
-      'priorite': tachePriorite
+      'priorite': tachePriorite,
+      'uid': firebaseAuth.currentUser!.uid
     });
     Navigator.pop(context);
   }
