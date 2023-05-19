@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:tp2/page/signin.dart';
+import 'package:tp2/page/verification.dart';
 import '../composants/bouttounLogo.dart';
 import '../composants/bouttonSignUp.dart';
 import '../composants/champDeSaisie.dart';
@@ -135,10 +137,15 @@ class _SignupState extends State<Signup> {
         email: utilisateurControlleur.text,
         password: mdpControlleur.text,
       );
+      FirebaseFirestore.instance.collection("utilisateure").add({
+        'email': utilisateurControlleur.text,
+        'mot_de_passse': mdpControlleur.text,
+        'uid': firebaseAuth.currentUser!.uid
+      });
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (builder) => Login()),
+        MaterialPageRoute(builder: (builder) => VerificationEmail()),
         (route) => false,
       );
     } on FirebaseException catch (e) {

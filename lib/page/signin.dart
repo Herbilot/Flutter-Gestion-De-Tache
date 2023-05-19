@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:tp2/page/home.dart';
+import 'package:tp2/page/restore.dart';
 import 'package:tp2/page/signup.dart';
+import 'package:tp2/page/verification.dart';
 import 'package:tp2/services/auth-service.dart';
 import '../composants/bouttounLogo.dart';
 import '../composants/bouttonLogin.dart';
@@ -75,6 +77,38 @@ class _LoginState extends State<Login> {
               hintText: 'Mot de passe',
               controlleur: mdpControlleur,
               obscureText: true,
+            ),
+            SizedBox(height: 25),
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (builder) => ResetPassword()),
+                    (route) => false);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Mot de passe oublié?',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             SizedBox(height: 50),
             butonL(
@@ -148,7 +182,7 @@ class _LoginState extends State<Login> {
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (builder) => HomePage()),
+          MaterialPageRoute(builder: (builder) => VerificationEmail()),
           (route) => false);
     } on FirebaseException catch (e) {
       final snackbar = SnackBar(content: Text(e.toString()));

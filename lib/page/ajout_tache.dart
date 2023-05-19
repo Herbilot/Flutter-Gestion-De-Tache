@@ -9,6 +9,7 @@ import 'package:tp2/composants/chipBox.dart';
 import 'package:tp2/composants/label.dart';
 import 'package:tp2/composants/textfield.dart';
 import 'package:tp2/composants/texteArea.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:intl/intl.dart';
 
 class PageAjout extends StatefulWidget {
@@ -28,6 +29,7 @@ class _PageAjoutState extends State<PageAjout> {
   String tacheCategorie = "";
   final _dateFin = TextEditingController();
   final _dateDebut = TextEditingController();
+  firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
   void _Ajouter() {
     FirebaseFirestore.instance.collection('Tache').add({
       'date_fin': _dateFinControl.text,
@@ -35,7 +37,8 @@ class _PageAjoutState extends State<PageAjout> {
       'categorie': tacheCategorie,
       'description': _descriptionControlleur.text,
       'libelle': _libelleControlleur.text,
-      'priorite': tachePriorite
+      'priorite': tachePriorite,
+      'uid': firebaseAuth.currentUser!.uid
     });
     Navigator.pop(context);
   }
