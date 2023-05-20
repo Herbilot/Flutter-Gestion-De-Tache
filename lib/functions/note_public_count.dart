@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> updatePublicNoteCount(String userId) async {
-  final userRef = FirebaseFirestore.instance.collection('users').doc(userId);
-  final notesRef = FirebaseFirestore.instance.collection('notes');
+  final userRef =
+      FirebaseFirestore.instance.collection('utilisateurs').doc(userId);
+  final notesRef = FirebaseFirestore.instance.collection('Tache');
 
   try {
     final userSnapshot = await userRef.get();
@@ -18,7 +19,8 @@ Future<void> updatePublicNoteCount(String userId) async {
 
     if (notesData != null) {
       final userNotes = notesData
-          .where((note) => note['userId'] == userId && note['cat'] == 'public')
+          .where(
+              (note) => note['uid'] == userId && note['categorie'] == 'Public')
           .toList();
       notePublicCount = userNotes.length;
     }
@@ -30,8 +32,10 @@ Future<void> updatePublicNoteCount(String userId) async {
 }
 
 Future<int> getPublicNoteCount(String userId) async {
-  DocumentSnapshot userSnapshot =
-      await FirebaseFirestore.instance.collection('users').doc(userId).get();
+  DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+      .collection('utilisateurs')
+      .doc(userId)
+      .get();
   if (userSnapshot.exists) {
     int notePublicCount = userSnapshot['notePublicCount'] ?? 0;
     return notePublicCount;

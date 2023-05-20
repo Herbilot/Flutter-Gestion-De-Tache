@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> updatePrivateNoteCount(String userId) async {
   final userRef =
-      FirebaseFirestore.instance.collection('Utilisateurs').doc(userId);
+      FirebaseFirestore.instance.collection('utilisateurs').doc(userId);
   final notesRef = FirebaseFirestore.instance.collection('Tache');
 
   try {
@@ -19,8 +19,8 @@ Future<void> updatePrivateNoteCount(String userId) async {
 
     if (notesData != null) {
       final userNotes = notesData
-          .where((note) =>
-              note['userId'] == userId && note['categorie'] == 'private')
+          .where(
+              (note) => note['uid'] == userId && note['categorie'] == 'Private')
           .toList();
       notePrivateCount = userNotes.length;
     }

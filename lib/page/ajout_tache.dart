@@ -50,6 +50,18 @@ class _PageAjoutState extends State<PageAjout> {
       'priorite': tachePriorite,
       'uid': firebaseAuth.currentUser!.uid
     });
+    String status;
+    DateTime currentDate = DateTime.now();
+
+    if (_dateDebutControl == (currentDate) &&
+        _dateFinControl == (currentDate)) {
+      status = 'en cours';
+    } else if (_dateDebutControl == (currentDate) &&
+        _dateFinControl == (currentDate)) {
+      status = 'pas en cours';
+    } else {
+      status = 'échue';
+    }
     updateNoteEchueCount(firebaseAuth.currentUser!.uid);
     updateNoteEnCoursCount(firebaseAuth.currentUser!.uid);
     updateNotePasEnCoursCount(firebaseAuth.currentUser!.uid);
