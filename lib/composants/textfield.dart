@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tp2/page/tacheDetails.dart';
+import 'package:groupe2/page/tacheDetails.dart';
 
 class ChampDeTexte extends StatelessWidget {
   final String hintText;

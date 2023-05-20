@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:groupe2/page/repart.dart';
 import 'package:intl/intl.dart';
-import 'package:tp2/composants/cardTache.dart';
-import 'package:tp2/page/ajout_tache.dart';
-import 'package:tp2/page/signin.dart';
-import 'package:tp2/page/tacheDetails.dart';
-import 'package:tp2/services/auth-service.dart';
+import 'package:groupe2/composants/cardTache.dart';
+import 'package:groupe2/page/ajout_tache.dart';
+import 'package:groupe2/page/signin.dart';
+import 'package:groupe2/page/tacheDetails.dart';
+import 'package:groupe2/services/auth-service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class HomePage extends StatefulWidget {
@@ -78,10 +79,16 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Color(0xff1040CC),
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              size: 32,
-              color: Colors.white,
+            icon: InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => RepartPage()));
+              },
+              child: Icon(
+                Icons.home,
+                size: 32,
+                color: Colors.white,
+              ),
             ),
             label: 'Accueil',
           ),
@@ -123,6 +130,7 @@ class _HomePageState extends State<HomePage> {
           stream: FirebaseFirestore.instance
               .collection('Tache')
               .where('uid', isEqualTo: firebaseAuth.currentUser!.uid)
+              .where('categorie', isEqualTo: 'Private')
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {

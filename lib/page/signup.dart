@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:tp2/page/signin.dart';
-import 'package:tp2/page/verification.dart';
+import 'package:groupe2/page/signin.dart';
+import 'package:groupe2/page/verification.dart';
 import '../composants/bouttounLogo.dart';
 import '../composants/bouttonSignUp.dart';
 import '../composants/champDeSaisie.dart';
@@ -22,6 +22,8 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final utilisateurControlleur = TextEditingController();
   final mdpControlleur = TextEditingController();
+  final nomControlleur = TextEditingController();
+  final prenomControlleur = TextEditingController();
   firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,18 @@ class _SignupState extends State<Signup> {
             champDeSaisie(
               hintText: 'Nom d\'utilisateur',
               controlleur: utilisateurControlleur,
+              obscureText: false,
+            ),
+            SizedBox(height: 20),
+            champDeSaisie(
+              hintText: 'Mon',
+              controlleur: nomControlleur,
+              obscureText: false,
+            ),
+            SizedBox(height: 20),
+            champDeSaisie(
+              hintText: 'Prénom',
+              controlleur: prenomControlleur,
               obscureText: false,
             ),
             SizedBox(height: 20),
@@ -133,15 +147,27 @@ class _SignupState extends State<Signup> {
       },
     );
     try {
-      await firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await firebaseAuth.createUserWithEmailAndPassword(
         email: utilisateurControlleur.text,
         password: mdpControlleur.text,
       );
-      FirebaseFirestore.instance.collection("utilisateure").add({
-        'email': utilisateurControlleur.text,
-        'mot_de_passse': mdpControlleur.text,
-        'uid': firebaseAuth.currentUser!.uid
-      });
+
+      User? user = userCredential.user;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection("utilisateurs")
+            .doc(user.uid)
+            .set({
+          'nom': nomControlleur.text,
+          'prenom': prenomControlleur.text,
+          'notePrivateCount': 0,
+          'noteEnCoursCount': 0,
+          'notePublicCount': 0,
+          'noteEchueCount': 0,
+          'notePasEnCoursCount': 0
+        });
+      }
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
         context,

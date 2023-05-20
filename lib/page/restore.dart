@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tp2/composants/bouttonRestore.dart';
-import 'package:tp2/page/signin.dart';
-import 'package:tp2/services/auth-service.dart';
+import 'package:groupe2/composants/bouttonRestore.dart';
+import 'package:groupe2/page/signin.dart';
+import 'package:groupe2/services/auth-service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../composants/champDeSaisie.dart';
 import 'home.dart';

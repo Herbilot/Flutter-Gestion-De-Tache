@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tp2/page/home.dart';
-import 'package:tp2/page/signin.dart';
-import 'package:tp2/services/auth-service.dart';
+import 'package:groupe2/page/home.dart';
+import 'package:groupe2/page/signin.dart';
+import 'package:groupe2/services/auth-service.dart';
 import '../composants/bouttonRestore.dart';
 import '../composants/champDeSaisie.dart';
 
@@ -43,6 +43,9 @@ class _VerificationEmailState extends State<VerificationEmail> {
 
   void checkEmailVerife() async {
     await FirebaseAuth.instance.currentUser!.reload();
+    if (!mounted) {
+      return;
+    }
     setState(() {
       emailVerifie = FirebaseAuth.instance.currentUser!.emailVerified;
     });
@@ -53,6 +56,9 @@ class _VerificationEmailState extends State<VerificationEmail> {
     try {
       final utilisateur = FirebaseAuth.instance.currentUser!;
       await utilisateur.sendEmailVerification();
+      if (!mounted) {
+        return;
+      }
 
       setState(() {
         envoiMailPossible = false;

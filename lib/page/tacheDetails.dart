@@ -1,12 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tp2/composants/button.dart';
-import 'package:tp2/composants/buttonUpdate.dart';
-import 'package:tp2/composants/chipBox.dart';
-import 'package:tp2/composants/label.dart';
-import 'package:tp2/composants/textfield.dart';
-import 'package:tp2/composants/texteArea.dart';
+import 'package:groupe2/composants/button.dart';
+import 'package:groupe2/composants/buttonUpdate.dart';
+import 'package:groupe2/composants/chipBox.dart';
+import 'package:groupe2/composants/label.dart';
+import 'package:groupe2/composants/textfield.dart';
+import 'package:groupe2/composants/texteArea.dart';
+import 'package:groupe2/functions/note_echue_count.dart';
+import 'package:groupe2/functions/note_en_cours_count.dart';
+import 'package:groupe2/functions/note_pas_en_cours_count.dart';
+import 'package:groupe2/functions/note_private_count.dart';
+import 'package:groupe2/functions/note_public_count.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 import '../composants/champDate.dart';
 
@@ -28,6 +34,7 @@ class _TacheDetails extends State<TacheDetails> {
   late String tachePriorite;
   late String tacheCategorie;
   bool modifier = false;
+  firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -91,6 +98,12 @@ class _TacheDetails extends State<TacheDetails> {
                             .then((value) {
                           Navigator.pop(context);
                         });
+                        updateNoteEchueCount(firebaseAuth.currentUser!.uid);
+                        updateNoteEnCoursCount(firebaseAuth.currentUser!.uid);
+                        updateNotePasEnCoursCount(
+                            firebaseAuth.currentUser!.uid);
+                        updatePrivateNoteCount(firebaseAuth.currentUser!.uid);
+                        updatePublicNoteCount(firebaseAuth.currentUser!.uid);
                       },
                       icon: Icon(
                         Icons.delete,

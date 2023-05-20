@@ -1,11 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:tp2/page/ajout_tache.dart';
-import 'package:tp2/page/home.dart';
-import 'package:tp2/page/signin.dart';
-import 'package:tp2/page/signup.dart';
-import 'package:tp2/services/auth-service.dart';
+import 'package:groupe2/page/ajout_tache.dart';
+import 'package:groupe2/page/home.dart';
+import 'package:groupe2/page/signin.dart';
+import 'package:groupe2/page/signup.dart';
+import 'package:groupe2/serveur_distant/web_distant.dart';
+import 'package:groupe2/services/auth-service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

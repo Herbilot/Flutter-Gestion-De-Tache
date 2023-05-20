@@ -3,13 +3,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tp2/composants/button.dart';
-import 'package:tp2/composants/champDate.dart';
-import 'package:tp2/composants/chipBox.dart';
-import 'package:tp2/composants/label.dart';
-import 'package:tp2/composants/textfield.dart';
-import 'package:tp2/composants/texteArea.dart';
+import 'package:groupe2/composants/button.dart';
+import 'package:groupe2/composants/champDate.dart';
+import 'package:groupe2/composants/chipBox.dart';
+import 'package:groupe2/composants/label.dart';
+import 'package:groupe2/composants/textfield.dart';
+import 'package:groupe2/composants/texteArea.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:groupe2/functions/note_echue_count.dart';
+import 'package:groupe2/functions/note_en_cours_count.dart';
+import 'package:groupe2/functions/note_pas_en_cours_count.dart';
+import 'package:groupe2/functions/note_private_count.dart';
+import 'package:groupe2/functions/note_public_count.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class PageAjout extends StatefulWidget {
@@ -20,6 +28,7 @@ class PageAjout extends StatefulWidget {
 }
 
 class _PageAjoutState extends State<PageAjout> {
+  final url = 'http://192.168.0.108:5000/taches';
   final _libelleControlleur = TextEditingController();
   final _dateDebutControl = TextEditingController();
   final _dateFinControl = TextEditingController();
@@ -30,7 +39,8 @@ class _PageAjoutState extends State<PageAjout> {
   final _dateFin = TextEditingController();
   final _dateDebut = TextEditingController();
   firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
-  void _Ajouter() {
+
+  void _Ajouter() async {
     FirebaseFirestore.instance.collection('Tache').add({
       'date_fin': _dateFinControl.text,
       'date_debut': _dateDebutControl.text,
@@ -40,6 +50,12 @@ class _PageAjoutState extends State<PageAjout> {
       'priorite': tachePriorite,
       'uid': firebaseAuth.currentUser!.uid
     });
+    updateNoteEchueCount(firebaseAuth.currentUser!.uid);
+    updateNoteEnCoursCount(firebaseAuth.currentUser!.uid);
+    updateNotePasEnCoursCount(firebaseAuth.currentUser!.uid);
+    updatePrivateNoteCount(firebaseAuth.currentUser!.uid);
+    updatePublicNoteCount(firebaseAuth.currentUser!.uid);
+
     Navigator.pop(context);
   }
 
@@ -138,7 +154,7 @@ class _PageAjoutState extends State<PageAjout> {
                   ),
                   Row(
                     children: [
-                      categorie('Divertissement', 0xff00FF00),
+                      categorie('Private', 0xff00FF00),
                     ],
                   ),
                   SizedBox(
@@ -146,7 +162,7 @@ class _PageAjoutState extends State<PageAjout> {
                   ),
                   Row(
                     children: [
-                      categorie('Travail', 0Xffff6d6e),
+                      categorie('Public', 0Xffff6d6e),
                       SizedBox(
                         width: 12,
                       ),
