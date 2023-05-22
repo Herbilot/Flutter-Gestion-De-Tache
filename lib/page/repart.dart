@@ -31,9 +31,7 @@ class _HomePageState extends State<RepartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff1040CC),
       appBar: AppBar(
-        backgroundColor: Color(0xff1040CC),
         title: Text(
           'Liste des taches',
           style: TextStyle(
@@ -80,7 +78,6 @@ class _HomePageState extends State<RepartPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xff1040CC),
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(

@@ -41,15 +41,6 @@ class _PageAjoutState extends State<PageAjout> {
   firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
 
   void _Ajouter() async {
-    FirebaseFirestore.instance.collection('Tache').add({
-      'date_fin': _dateFinControl.text,
-      'date_debut': _dateDebutControl.text,
-      'categorie': tacheCategorie,
-      'description': _descriptionControlleur.text,
-      'libelle': _libelleControlleur.text,
-      'priorite': tachePriorite,
-      'uid': firebaseAuth.currentUser!.uid
-    });
     String status;
     DateTime currentDate = DateTime.now();
 
@@ -62,6 +53,17 @@ class _PageAjoutState extends State<PageAjout> {
     } else {
       status = 'échue';
     }
+    FirebaseFirestore.instance.collection('Tache').add({
+      'date_fin': _dateFinControl.text,
+      'date_debut': _dateDebutControl.text,
+      'categorie': tacheCategorie,
+      'description': _descriptionControlleur.text,
+      'libelle': _libelleControlleur.text,
+      'priorite': tachePriorite,
+      'uid': firebaseAuth.currentUser!.uid,
+      'status': status
+    });
+
     updateNoteEchueCount(firebaseAuth.currentUser!.uid);
     updateNoteEnCoursCount(firebaseAuth.currentUser!.uid);
     updateNotePasEnCoursCount(firebaseAuth.currentUser!.uid);
@@ -77,9 +79,7 @@ class _PageAjoutState extends State<PageAjout> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          color: Color(0xff1040CC),
-        ),
+        decoration: BoxDecoration(),
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -167,42 +167,30 @@ class _PageAjoutState extends State<PageAjout> {
                   Row(
                     children: [
                       categorie('Private', 0xff00FF00),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      categorie('Public', 0xfff29732),
                     ],
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    children: [
-                      categorie('Public', 0Xffff6d6e),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      categorie('Etude', 0xfff29732),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      categorie('Famille', 0xff2bc8d9),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 12),
                   label('Date début'),
-                  SizedBox(height: 15),
+                  SizedBox(height: 20),
                   champDate(
                     hintText: 'dd/mm/yyyy',
                     dateControlleur: _dateDebutControl,
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 40),
                   label('Date fin'),
-                  SizedBox(height: 15),
+                  SizedBox(height: 12),
                   champDate(
                     hintText: 'dd/mm/yyyy',
                     dateControlleur: _dateFinControl,
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 60),
                   buton(onTap: _Ajouter),
                   SizedBox(height: 15),
                 ],

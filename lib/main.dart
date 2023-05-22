@@ -18,6 +18,8 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.light);
   const MyApp({super.key});
 
   @override
@@ -40,32 +42,25 @@ class _MyAppState extends State<MyApp> {
       currentPage = HomePage();
     }
   }
-  // void connexion() async {
-  //   try {
-  //     await firebaseAuth.createUserWithEmailAndPassword(
-  //         email: 'mamadev@herbidev.com', password: 'password123');
-
-  //     await firebaseAuth.createUserWithEmailAndPassword(
-  //         email: 'herbilot@herbidev.com', password: 'password123');
-
-  //     await firebaseAuth.createUserWithEmailAndPassword(
-  //         email: 'papadev@herbidev.com', password: 'password123');
-  //   } on FirebaseException catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeModal(),
-      child: Consumer(builder: (context, ThemeModal themeModal, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: themeModal.isDark ? ThemeData.dark() : ThemeData.light(),
-          home: currentPage,
-        );
-      }),
-    );
+    return ValueListenableBuilder<ThemeMode>(
+        valueListenable: MyApp.themeNotifier,
+        builder: (_, ThemeMode currentMode, __) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+                colorScheme: ColorScheme.fromSwatch().copyWith(
+                  primary: Color(0xff1040CC),
+                ),
+                scaffoldBackgroundColor: Color(0xff1040CC),
+                bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                    backgroundColor: Color(0xff1040CC))),
+            darkTheme: ThemeData.dark(),
+            themeMode: currentMode,
+            home: currentPage,
+          );
+        });
   }
 }
