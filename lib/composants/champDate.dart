@@ -41,7 +41,8 @@ class champDate extends StatelessWidget {
               firstDate: DateTime(2022),
               lastDate: DateTime(2100));
           if (picked != null) {
-            String formattedDate = DateFormat('dd/MM/yyyy').format(picked);
+            String formattedDate =
+                DateFormat('dd/MM/yyyy HH:mm:ss').format(picked);
             dateControlleur.text = formattedDate;
           }
         },

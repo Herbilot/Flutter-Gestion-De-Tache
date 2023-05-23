@@ -162,10 +162,10 @@ class _SignupState extends State<Signup> {
           'nom': nomControlleur.text,
           'prenom': prenomControlleur.text,
           'notePrivateCount': 0,
-          'noteEnCoursCount': 0,
+          'TacheEnCoursCount': 0,
           'notePublicCount': 0,
-          'noteEchueCount': 0,
-          'notePasEnCoursCount': 0
+          'TacheEchueCount': 0,
+          'TachePasEnCoursCount': 0
         });
       }
       // ignore: use_build_context_synchronously

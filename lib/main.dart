@@ -1,3 +1,5 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
@@ -30,6 +32,10 @@ class _MyAppState extends State<MyApp> {
   // firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
   Widget currentPage = Login();
   Service authClass = Service();
+
+  var isLogged = false;
+  var auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     checkLogin();
@@ -37,10 +43,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   void checkLogin() async {
-    String? token = await authClass.getToken();
-    if (token != null) {
-      currentPage = HomePage();
-    }
+    auth.authStateChanges().listen((User? user) {
+      if (user != null && mounted) {
+        setState(() {
+          currentPage = HomePage();
+        });
+      }
+    });
+    // String? token = await authClass.getToken();
+    // if (token != null) {
+    //   currentPage = HomePage();
+    // }
   }
 
   @override
@@ -59,7 +72,19 @@ class _MyAppState extends State<MyApp> {
                     backgroundColor: Color(0xff1040CC))),
             darkTheme: ThemeData.dark(),
             themeMode: currentMode,
-            home: currentPage,
+            home: AnimatedSplashScreen(
+              splash: Text(
+                'Powered By Groupe 2',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.white),
+              ),
+              nextScreen: currentPage,
+              duration: 3000,
+              splashTransition: SplashTransition.scaleTransition,
+              backgroundColor: Color.fromARGB(255, 28, 64, 115),
+            ),
           );
         });
   }

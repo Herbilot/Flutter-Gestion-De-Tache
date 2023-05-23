@@ -122,20 +122,24 @@ class _HomePageState extends State<RepartPage> {
         ],
       ),
       body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: GridView.count(
+          crossAxisCount: 2,
+          padding: const EdgeInsets.all(20.0),
+          childAspectRatio: 1.5,
           children: [
             FutureBuilder<int>(
               future: getPrivateNoteCount(firebaseAuth.currentUser!.uid),
               builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   int notePrivateCount = snapshot.data ?? 0;
                   return _buildCard(
-                      'Nombre de notes privées', notePrivateCount);
+                    'Nombre de tâches privées',
+                    notePrivateCount,
+                  );
                 }
               },
             ),
@@ -143,13 +147,15 @@ class _HomePageState extends State<RepartPage> {
               future: getPublicNoteCount(firebaseAuth.currentUser!.uid),
               builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   int notePublicCount = snapshot.data ?? 0;
                   return _buildCard(
-                      'Nombre de notes publiques', notePublicCount);
+                    'Nombre de tâches publiques',
+                    notePublicCount,
+                  );
                 }
               },
             ),
@@ -157,13 +163,15 @@ class _HomePageState extends State<RepartPage> {
               future: getNoteEnCoursCount(firebaseAuth.currentUser!.uid),
               builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   int noteEnCoursCount = snapshot.data ?? 0;
                   return _buildCard(
-                      'Nombre de notes en cours', noteEnCoursCount);
+                    'Nombre de tâches en cours',
+                    noteEnCoursCount,
+                  );
                 }
               },
             ),
@@ -171,13 +179,15 @@ class _HomePageState extends State<RepartPage> {
               future: getNotePasEnCoursCount(firebaseAuth.currentUser!.uid),
               builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   int notePasEnCoursCount = snapshot.data ?? 0;
                   return _buildCard(
-                      'Nombre de notes pas en cours', notePasEnCoursCount);
+                    'Nombre de tâches pas en cours',
+                    notePasEnCoursCount,
+                  );
                 }
               },
             ),
@@ -185,12 +195,15 @@ class _HomePageState extends State<RepartPage> {
               future: getNoteEchueCount(firebaseAuth.currentUser!.uid),
               builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   int noteEchueCount = snapshot.data ?? 0;
-                  return _buildCard('Nombre de notes échues', noteEchueCount);
+                  return _buildCard(
+                    'Nombre de tâches échues',
+                    noteEchueCount,
+                  );
                 }
               },
             ),
@@ -216,9 +229,12 @@ class _HomePageState extends State<RepartPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18.0),
+            Expanded(
+              // Ajout du widget Expanded
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 18.0),
+              ),
             ),
             Text(
               count.toString(),
@@ -227,6 +243,7 @@ class _HomePageState extends State<RepartPage> {
           ],
         ),
       ),
+      color: Colors.white, // Ajout du fond bleu pour les cartes
     );
   }
 }

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:groupe2/composants/sidebar.dart';
 import 'package:groupe2/functions/ThemeModal.dart';
 import 'package:groupe2/main.dart';
+import 'package:groupe2/page/home.dart';
 import 'package:groupe2/page/repart.dart';
-import 'package:groupe2/page/tachePublic.dart';
 import 'package:intl/intl.dart';
 import 'package:groupe2/composants/cardTache.dart';
 import 'package:groupe2/page/ajout_tache.dart';
@@ -16,14 +16,14 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:provider/provider.dart';
 import 'package:switcher_button/switcher_button.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class TachePublic extends StatefulWidget {
+  const TachePublic({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<TachePublic> {
   Service authClass = Service();
   firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
   List<Selectionner> selectionne = [];
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
       drawer: SideBar(),
       appBar: AppBar(
         title: Text(
-          'Liste des taches',
+          'Liste des taches public',
           style: TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.bold,
@@ -110,23 +110,22 @@ class _HomePageState extends State<HomePage> {
             icon: InkWell(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => TachePublic()));
+                    MaterialPageRoute(builder: (builder) => HomePage()));
               },
               child: Icon(
-                Icons.people,
+                Icons.person,
                 size: 32,
                 color: Colors.white,
               ),
             ),
-            label: 'Taches publiques',
+            label: 'Taches privées',
           ),
         ],
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('Tache')
-              .where('uid', isEqualTo: firebaseAuth.currentUser!.uid)
-              .where('categorie', isEqualTo: 'Private')
+              .where('categorie', isEqualTo: 'Public')
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {

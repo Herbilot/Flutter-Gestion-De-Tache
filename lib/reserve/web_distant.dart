@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:groupe2/composants/cardTache.dart';
-import 'package:groupe2/model/tache.dart';
 import 'package:groupe2/page/home.dart';
 import 'package:groupe2/page/tacheDetails.dart';
 import 'package:groupe2/serveur_distant/ajout_distant.dart';
-import 'package:groupe2/services/tache_service.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -122,49 +120,61 @@ class _ServeurDistantState extends State<ServeurDistant> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Tache>>(
-        future: TacheService().getTaches(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: FutureBuilder(
+          future: listeDesTaches,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return ListView.builder(
+              itemCount: snapshot.data?.taches.length,
+              itemBuilder: (context, index) {
+                final tache = snapshot.data?.taches[index];
+                IconData icon;
+                Color couleurIcon;
+                switch (tache['categorie']) {
+                  case 'public':
+                    icon = Icons.movie;
+                    couleurIcon = Color(0xff35DA00);
+                    break;
+                  case 'Private':
+                    icon = Icons.business;
+                    couleurIcon = Color(0xffFB6E72);
+                    break;
 
-          final notes = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: notes.length,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () {
-                  // TODO: Navigate to note detail page
-                },
-                child: Card(
-                  elevation: 3.0,
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 6.0),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${notes[index].libelle}',
-                          style: const TextStyle(fontSize: 18.0),
+                  default:
+                    icon = Icons.task;
+                    couleurIcon = Color(0xffffffff);
+                }
+                selectionne.add(Selectionner(
+                    id: snapshot.data!.taches[index]['id'].toString(),
+                    check: false));
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (builder) => TacheDetails(
+                          tache: tache,
+                          id: snapshot.data!.taches[index]['id'].toString(),
                         ),
-                      ],
-                    ),
+                      ),
+                    );
+                  },
+                  child: CardTache(
+                    libelleTache: tache['libelle'],
+                    heure: '',
+                    icon: icon,
+                    couleurIcon: Colors.white,
+                    bgIcon: couleurIcon,
+                    coche: selectionne[index].check,
+                    index: index,
+                    changementEtat: changementEtat,
                   ),
-                ),
-              );
-            },
-          );
-        },
-      ),
+                );
+              },
+            );
+          }),
       // body: Container(
       //   child: Stack(
       //     children: <Widget>[

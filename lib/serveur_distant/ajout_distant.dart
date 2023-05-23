@@ -15,22 +15,20 @@ import 'package:groupe2/functions/note_en_cours_count.dart';
 import 'package:groupe2/functions/note_pas_en_cours_count.dart';
 import 'package:groupe2/functions/note_private_count.dart';
 import 'package:groupe2/functions/note_public_count.dart';
-import 'package:groupe2/model/tache.dart';
-import 'package:groupe2/serveur_distant/web_distant%20-%20Copie.dart';
-import 'package:groupe2/services/tache_service.dart';
+import 'package:groupe2/serveur_distant/web_distant.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-class PageAjout extends StatefulWidget {
-  PageAjout({super.key});
+class PageAjoutDistant extends StatefulWidget {
+  PageAjoutDistant({super.key});
 
   @override
-  State<PageAjout> createState() => _PageAjoutState();
+  State<PageAjoutDistant> createState() => _PageAjoutState();
 }
 
-class _PageAjoutState extends State<PageAjout> {
+class _PageAjoutState extends State<PageAjoutDistant> {
   final url = 'http://192.168.0.108:5000/taches';
   final _libelleControlleur = TextEditingController();
   final _dateDebutControl = TextEditingController();
@@ -39,112 +37,26 @@ class _PageAjoutState extends State<PageAjout> {
   DateTime _selectedDate = DateTime.now();
   String tachePriorite = "";
   String tacheCategorie = "";
-  final _dateFin = TextEditingController();
-  final _dateDebut = TextEditingController();
+  final DateTime _dateFin = DateTime.now();
+  final DateTime _dateDebut = DateTime.now();
   firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
-  bool _checkDateValidity() {
-    if (_dateDebut.text.isNotEmpty && _dateFin.text.isNotEmpty) {
-      DateTime dateDebut = DateFormat('dd/MM/yyyy').parse(_dateDebut.text);
-      DateTime dateFin = DateFormat('dd/MM/yyyy').parse(_dateFin.text);
-
-      return dateDebut.isBefore(dateFin);
-    }
-    return true;
-  }
-
-  // void _Ajouter() async {
-  //   print(_dateDebut.text);
-  //   DateTime dateDebut = DateFormat('dd/MM/yyyy').parse(_dateDebut.text);
-  //   print(dateDebut);
-  //   DateTime dateFin = DateFormat('dd/MM/yyyy').parse(_dateFin.text);
-
-  //   String status;
-  //   DateTime currentDate = DateTime.now();
-
-  //   if (dateDebut.isBefore(currentDate) && dateFin.isAfter(currentDate)) {
-  //     status = 'en cours';
-  //   } else if (dateDebut.isBefore(currentDate) &&
-  //       dateFin.isBefore(currentDate)) {
-  //     status = 'pas en cours';
-  //   } else {
-  //     status = 'échue';
-  //   }
-
-  //   TacheService().createTache(Tache(
-  //       libelle: _libelleControlleur.text,
-  //       description: _descriptionControlleur.text,
-  //       categorie: tacheCategorie,
-  //       dateDebut: dateDebut,
-  //       dateFin: dateFin,
-  //       status: status));
-
-  //   Navigator.pop(context);
-  // }
 
   void _Ajouter() async {
-    if (!_checkDateValidity()) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Erreur de date'),
-            content:
-                Text('La date de début doit être antérieure à la date de fin.'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-      return;
-    }
-    if (_libelleControlleur.text.isEmpty ||
-        _descriptionControlleur.text.isEmpty ||
-        tacheCategorie.isEmpty ||
-        _dateDebut.text.isEmpty ||
-        _dateFin.text.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Champs obligatoires'),
-            content: Text('Veuillez remplir tous les champs obligatoires.'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-      return;
-    }
-    DateTime dateDebut = DateFormat('dd/MM/yyyy').parse(_dateDebut.text);
-    print(dateDebut);
-    DateTime dateFin = DateFormat('dd/MM/yyyy').parse(_dateFin.text);
-
     String status;
     DateTime currentDate = DateTime.now();
 
-    if (dateDebut.isBefore(currentDate) && dateFin.isAfter(currentDate)) {
+    if (_dateDebut.compareTo(currentDate) < 0 &&
+        _dateFin.compareTo(currentDate) > 0) {
       status = 'en cours';
-    } else if (dateDebut.isBefore(currentDate) &&
-        dateFin.isBefore(currentDate)) {
-      status = 'échue';
-    } else {
+    } else if (_dateDebutControl == (currentDate) &&
+        _dateFinControl == (currentDate)) {
       status = 'pas en cours';
+    } else {
+      status = 'échue';
     }
     FirebaseFirestore.instance.collection('Tache').add({
-      'date_fin': _dateDebut.text,
-      'date_debut': _dateFin.text,
+      'date_fin': _dateDebutControl.text,
+      'date_debut': _dateFinControl.text,
       'categorie': tacheCategorie,
       'description': _descriptionControlleur.text,
       'libelle': _libelleControlleur.text,
@@ -158,6 +70,15 @@ class _PageAjoutState extends State<PageAjout> {
     updateNotePasEnCoursCount(firebaseAuth.currentUser!.uid);
     updatePrivateNoteCount(firebaseAuth.currentUser!.uid);
     updatePublicNoteCount(firebaseAuth.currentUser!.uid);
+
+    ajoutServeurDistant(
+      'lundi',
+      'lundi',
+      'lundi',
+      'lundi',
+      'lundi',
+      'lundi',
+    );
 
     Navigator.pop(context);
   }
@@ -186,7 +107,7 @@ class _PageAjoutState extends State<PageAjout> {
                   ),
                 ),
                 Text(
-                  'Nouvelle tâche',
+                  'Nouvelle tâche Distante',
                   style: TextStyle(
                     fontSize: 30,
                     color: Colors.white,
@@ -270,14 +191,14 @@ class _PageAjoutState extends State<PageAjout> {
                   SizedBox(height: 20),
                   champDate(
                     hintText: 'dd/mm/yyyy',
-                    dateControlleur: _dateDebut,
+                    dateControlleur: _dateDebutControl,
                   ),
                   SizedBox(height: 40),
                   label('Date fin'),
                   SizedBox(height: 12),
                   champDate(
                     hintText: 'dd/mm/yyyy',
-                    dateControlleur: _dateFin,
+                    dateControlleur: _dateFinControl,
                   ),
                   SizedBox(height: 60),
                   buton(onTap: _Ajouter),
